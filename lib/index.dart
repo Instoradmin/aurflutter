@@ -28,3 +28,5 @@ export 'create_account_f_s_s_a_i/create_account_f_s_s_a_i_widget.dart'
     show CreateAccountFSSAIWidget;
 export 'create_account_f_s_s_a_i_linked/create_account_f_s_s_a_i_linked_widget.dart'
     show CreateAccountFSSAILinkedWidget;
+export 'create_account_p_a_n2/create_account_p_a_n2_widget.dart'
+    show CreateAccountPAN2Widget;

@@ -7,7 +7,12 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class CreateAccountGSTLinkedWidget extends StatefulWidget {
-  const CreateAccountGSTLinkedWidget({Key? key}) : super(key: key);
+  const CreateAccountGSTLinkedWidget({
+    Key? key,
+    this.gstTradeName,
+  }) : super(key: key);
+
+  final dynamic gstTradeName;
 
   @override
   _CreateAccountGSTLinkedWidgetState createState() =>
@@ -69,6 +74,16 @@ class _CreateAccountGSTLinkedWidgetState
             child: Column(
               mainAxisSize: MainAxisSize.max,
               children: [
+                Text(
+                  widget.gstTradeName!,
+                  style: FlutterFlowTheme.of(context).bodyText1.override(
+                        fontFamily: 'Poppins',
+                        color: FlutterFlowTheme.of(context).primaryColor,
+                      ),
+                ),
+                Divider(
+                  color: FlutterFlowTheme.of(context).secondaryText,
+                ),
                 Text(
                   'Thank you for linking GST.',
                   style: FlutterFlowTheme.of(context).subtitle1.override(

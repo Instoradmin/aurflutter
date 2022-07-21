@@ -1,3 +1,5 @@
+import '../backend/api_requests/api_calls.dart';
+import '../create_account_aadhar/create_account_aadhar_widget.dart';
 import '../create_account_aadhar_linked/create_account_aadhar_linked_widget.dart';
 import '../flutter_flow/flutter_flow_theme.dart';
 import '../flutter_flow/flutter_flow_util.dart';
@@ -8,7 +10,12 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class CreateAccountAadharValidWidget extends StatefulWidget {
-  const CreateAccountAadharValidWidget({Key? key}) : super(key: key);
+  const CreateAccountAadharValidWidget({
+    Key? key,
+    this.requestID,
+  }) : super(key: key);
+
+  final dynamic requestID;
 
   @override
   _CreateAccountAadharValidWidgetState createState() =>
@@ -17,13 +24,14 @@ class CreateAccountAadharValidWidget extends StatefulWidget {
 
 class _CreateAccountAadharValidWidgetState
     extends State<CreateAccountAadharValidWidget> {
-  TextEditingController? textController;
+  ApiCallResponse? aadharDwnldResponse;
+  TextEditingController? aadharOTPController;
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
     super.initState();
-    textController = TextEditingController();
+    aadharOTPController = TextEditingController();
   }
 
   @override
@@ -86,9 +94,9 @@ class _CreateAccountAadharValidWidgetState
                 ),
                 Divider(),
                 TextFormField(
-                  controller: textController,
+                  controller: aadharOTPController,
                   onChanged: (_) => EasyDebounce.debounce(
-                    'textController',
+                    'aadharOTPController',
                     Duration(milliseconds: 2000),
                     () => setState(() {}),
                   ),
@@ -117,10 +125,10 @@ class _CreateAccountAadharValidWidgetState
                         topRight: Radius.circular(4.0),
                       ),
                     ),
-                    suffixIcon: textController!.text.isNotEmpty
+                    suffixIcon: aadharOTPController!.text.isNotEmpty
                         ? InkWell(
                             onTap: () => setState(
-                              () => textController?.clear(),
+                              () => aadharOTPController?.clear(),
                             ),
                             child: Icon(
                               Icons.clear,
@@ -130,17 +138,38 @@ class _CreateAccountAadharValidWidgetState
                           )
                         : null,
                   ),
-                  style: FlutterFlowTheme.of(context).bodyText1,
+                  style: FlutterFlowTheme.of(context).bodyText1.override(
+                        fontFamily: 'Poppins',
+                        color: FlutterFlowTheme.of(context).secondaryText,
+                      ),
                   textAlign: TextAlign.center,
                 ),
                 FFButtonWidget(
                   onPressed: () async {
-                    await Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => CreateAccountAadharLinkedWidget(),
-                      ),
+                    aadharDwnldResponse = await AadharDownloadCall.call(
+                      requestID: widget.requestID,
+                      otp: int.parse(aadharOTPController!.text),
                     );
+                    if ((aadharDwnldResponse!?.succeeded ?? true)) {
+                      await Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => CreateAccountAadharLinkedWidget(
+                            aadharFullResponse:
+                                (aadharDwnldResponse?.jsonBody ?? ''),
+                          ),
+                        ),
+                      );
+                    } else {
+                      await Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => CreateAccountAadharWidget(),
+                        ),
+                      );
+                    }
+
+                    setState(() {});
                   },
                   text: 'Submit',
                   options: FFButtonOptions(

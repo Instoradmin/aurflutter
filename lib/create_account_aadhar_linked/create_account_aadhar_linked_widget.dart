@@ -1,4 +1,4 @@
-import '../create_account_p_a_n/create_account_p_a_n_widget.dart';
+import '../create_account_p_a_n2/create_account_p_a_n2_widget.dart';
 import '../flutter_flow/flutter_flow_theme.dart';
 import '../flutter_flow/flutter_flow_util.dart';
 import '../flutter_flow/flutter_flow_widgets.dart';
@@ -7,7 +7,12 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class CreateAccountAadharLinkedWidget extends StatefulWidget {
-  const CreateAccountAadharLinkedWidget({Key? key}) : super(key: key);
+  const CreateAccountAadharLinkedWidget({
+    Key? key,
+    this.aadharFullResponse,
+  }) : super(key: key);
+
+  final dynamic aadharFullResponse;
 
   @override
   _CreateAccountAadharLinkedWidgetState createState() =>
@@ -70,6 +75,64 @@ class _CreateAccountAadharLinkedWidgetState
               mainAxisSize: MainAxisSize.max,
               children: [
                 Text(
+                  valueOrDefault<String>(
+                    getJsonField(
+                      widget.aadharFullResponse!,
+                      r'''$.result.dataFromAadhaar.name''',
+                    ).toString(),
+                    'Aadhar Name',
+                  ),
+                  style: FlutterFlowTheme.of(context).bodyText1.override(
+                        fontFamily: 'Poppins',
+                        color: FlutterFlowTheme.of(context).primaryColor,
+                      ),
+                ),
+                Text(
+                  valueOrDefault<String>(
+                    getJsonField(
+                      widget.aadharFullResponse!,
+                      r'''$.result.dataFromAadhaar.maskedAadhaarNumber''',
+                    ).toString(),
+                    'Aadhar Number',
+                  ),
+                  style: FlutterFlowTheme.of(context).bodyText1.override(
+                        fontFamily: 'Poppins',
+                        color: FlutterFlowTheme.of(context).primaryColor,
+                      ),
+                ),
+                Text(
+                  valueOrDefault<String>(
+                    getJsonField(
+                      widget.aadharFullResponse!,
+                      r'''$.result.dataFromAadhaar.dob''',
+                    ).toString(),
+                    'Aadhar DoB',
+                  ),
+                  style: FlutterFlowTheme.of(context).bodyText1.override(
+                        fontFamily: 'Poppins',
+                        color: FlutterFlowTheme.of(context).primaryColor,
+                      ),
+                ),
+                Padding(
+                  padding: EdgeInsetsDirectional.fromSTEB(8, 0, 8, 0),
+                  child: Text(
+                    valueOrDefault<String>(
+                      getJsonField(
+                        widget.aadharFullResponse!,
+                        r'''$.result.dataFromAadhaar.address.combinedAddress''',
+                      ).toString(),
+                      'Aadhar Address',
+                    ),
+                    style: FlutterFlowTheme.of(context).bodyText1.override(
+                          fontFamily: 'Poppins',
+                          color: FlutterFlowTheme.of(context).primaryColor,
+                        ),
+                  ),
+                ),
+                Divider(
+                  color: FlutterFlowTheme.of(context).secondaryText,
+                ),
+                Text(
                   'Thank you for linking Aadhar.',
                   style: FlutterFlowTheme.of(context).subtitle1.override(
                         fontFamily: 'Poppins',
@@ -82,7 +145,7 @@ class _CreateAccountAadharLinkedWidgetState
                     await Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => CreateAccountPANWidget(),
+                        builder: (context) => CreateAccountPAN2Widget(),
                       ),
                     );
                   },

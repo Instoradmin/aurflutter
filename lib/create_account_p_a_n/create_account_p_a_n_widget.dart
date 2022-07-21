@@ -1,3 +1,4 @@
+import '../backend/api_requests/api_calls.dart';
 import '../create_account_p_a_n_linked/create_account_p_a_n_linked_widget.dart';
 import '../flutter_flow/flutter_flow_theme.dart';
 import '../flutter_flow/flutter_flow_util.dart';
@@ -16,7 +17,8 @@ class CreateAccountPANWidget extends StatefulWidget {
 }
 
 class _CreateAccountPANWidgetState extends State<CreateAccountPANWidget> {
-  TextEditingController? textController;
+  ApiCallResponse? panAPIResponse;
+  TextEditingController? panNumberController;
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
@@ -32,7 +34,7 @@ class _CreateAccountPANWidgetState extends State<CreateAccountPANWidget> {
       );
     });
 
-    textController = TextEditingController();
+    panNumberController = TextEditingController();
   }
 
   @override
@@ -96,9 +98,9 @@ class _CreateAccountPANWidgetState extends State<CreateAccountPANWidget> {
                   color: FlutterFlowTheme.of(context).secondaryText,
                 ),
                 TextFormField(
-                  controller: textController,
+                  controller: panNumberController,
                   onChanged: (_) => EasyDebounce.debounce(
-                    'textController',
+                    'panNumberController',
                     Duration(milliseconds: 2000),
                     () => setState(() {}),
                   ),
@@ -127,10 +129,10 @@ class _CreateAccountPANWidgetState extends State<CreateAccountPANWidget> {
                         topRight: Radius.circular(4.0),
                       ),
                     ),
-                    suffixIcon: textController!.text.isNotEmpty
+                    suffixIcon: panNumberController!.text.isNotEmpty
                         ? InkWell(
                             onTap: () => setState(
-                              () => textController?.clear(),
+                              () => panNumberController?.clear(),
                             ),
                             child: Icon(
                               Icons.clear,
@@ -140,17 +142,36 @@ class _CreateAccountPANWidgetState extends State<CreateAccountPANWidget> {
                           )
                         : null,
                   ),
-                  style: FlutterFlowTheme.of(context).bodyText1,
+                  style: FlutterFlowTheme.of(context).bodyText1.override(
+                        fontFamily: 'Poppins',
+                        color: FlutterFlowTheme.of(context).secondaryText,
+                      ),
                   textAlign: TextAlign.center,
                 ),
                 FFButtonWidget(
                   onPressed: () async {
-                    await Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => CreateAccountPANLinkedWidget(),
-                      ),
+                    panAPIResponse = await PANAuthCall.call(
+                      panNumber: panNumberController!.text,
                     );
+                    if ((panAPIResponse!?.succeeded ?? true)) {
+                      await Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => CreateAccountPANLinkedWidget(
+                            panAPIResponse: (panAPIResponse?.jsonBody ?? ''),
+                          ),
+                        ),
+                      );
+                    } else {
+                      await Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => CreateAccountPANWidget(),
+                        ),
+                      );
+                    }
+
+                    setState(() {});
                   },
                   text: 'Validate',
                   options: FFButtonOptions(

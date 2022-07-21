@@ -1,5 +1,5 @@
 import '../backend/api_requests/api_calls.dart';
-import '../create_account_aadhar_valid/create_account_aadhar_valid_widget.dart';
+import '../create_account_p_a_n_linked/create_account_p_a_n_linked_widget.dart';
 import '../flutter_flow/flutter_flow_theme.dart';
 import '../flutter_flow/flutter_flow_util.dart';
 import '../flutter_flow/flutter_flow_widgets.dart';
@@ -8,23 +8,23 @@ import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class CreateAccountAadharWidget extends StatefulWidget {
-  const CreateAccountAadharWidget({Key? key}) : super(key: key);
+class CreateAccountPAN2Widget extends StatefulWidget {
+  const CreateAccountPAN2Widget({Key? key}) : super(key: key);
 
   @override
-  _CreateAccountAadharWidgetState createState() =>
-      _CreateAccountAadharWidgetState();
+  _CreateAccountPAN2WidgetState createState() =>
+      _CreateAccountPAN2WidgetState();
 }
 
-class _CreateAccountAadharWidgetState extends State<CreateAccountAadharWidget> {
-  ApiCallResponse? aadharOTPapiResponse;
-  TextEditingController? aadharNumController;
+class _CreateAccountPAN2WidgetState extends State<CreateAccountPAN2Widget> {
+  ApiCallResponse? panResponseVar;
+  TextEditingController? panNumController;
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
     super.initState();
-    aadharNumController = TextEditingController();
+    panNumController = TextEditingController();
   }
 
   @override
@@ -79,7 +79,7 @@ class _CreateAccountAadharWidgetState extends State<CreateAccountAadharWidget> {
               mainAxisSize: MainAxisSize.max,
               children: [
                 Text(
-                  'Link your Aadhar',
+                  'Link your PAN',
                   style: FlutterFlowTheme.of(context).subtitle1.override(
                         fontFamily: 'Poppins',
                         color: FlutterFlowTheme.of(context).primaryColor,
@@ -87,16 +87,16 @@ class _CreateAccountAadharWidgetState extends State<CreateAccountAadharWidget> {
                 ),
                 Divider(),
                 TextFormField(
-                  controller: aadharNumController,
+                  controller: panNumController,
                   onChanged: (_) => EasyDebounce.debounce(
-                    'aadharNumController',
+                    'panNumController',
                     Duration(milliseconds: 2000),
                     () => setState(() {}),
                   ),
                   autofocus: true,
                   obscureText: false,
                   decoration: InputDecoration(
-                    hintText: 'Enter Aadhar Number',
+                    hintText: 'Enter PAN Card Number',
                     hintStyle: FlutterFlowTheme.of(context).bodyText2,
                     enabledBorder: UnderlineInputBorder(
                       borderSide: BorderSide(
@@ -118,10 +118,10 @@ class _CreateAccountAadharWidgetState extends State<CreateAccountAadharWidget> {
                         topRight: Radius.circular(4.0),
                       ),
                     ),
-                    suffixIcon: aadharNumController!.text.isNotEmpty
+                    suffixIcon: panNumController!.text.isNotEmpty
                         ? InkWell(
                             onTap: () => setState(
-                              () => aadharNumController?.clear(),
+                              () => panNumController?.clear(),
                             ),
                             child: Icon(
                               Icons.clear,
@@ -139,31 +139,29 @@ class _CreateAccountAadharWidgetState extends State<CreateAccountAadharWidget> {
                 ),
                 FFButtonWidget(
                   onPressed: () async {
-                    aadharOTPapiResponse = await AadharOTPCall.call(
-                      aadharNum: int.parse(aadharNumController!.text),
+                    var _shouldSetState = false;
+                    panResponseVar = await PANAuthCall.call(
+                      panNumber: panNumController!.text,
                     );
-                    if ((aadharOTPapiResponse!?.succeeded ?? true)) {
+                    _shouldSetState = true;
+                    if ((panResponseVar!?.jsonBody ?? '')) {
                       await Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => CreateAccountAadharValidWidget(
-                            requestID: getJsonField(
-                              (aadharOTPapiResponse?.jsonBody ?? ''),
-                              r'''$.requestId''',
+                          builder: (context) => CreateAccountPANLinkedWidget(
+                            panAPIResponse: getJsonField(
+                              (panResponseVar?.jsonBody ?? ''),
+                              r'''$.result.name''',
                             ),
                           ),
                         ),
                       );
                     } else {
-                      await Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => CreateAccountAadharWidget(),
-                        ),
-                      );
+                      if (_shouldSetState) setState(() {});
+                      return;
                     }
 
-                    setState(() {});
+                    if (_shouldSetState) setState(() {});
                   },
                   text: 'Validate',
                   options: FFButtonOptions(

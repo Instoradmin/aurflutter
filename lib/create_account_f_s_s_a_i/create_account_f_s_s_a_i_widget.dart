@@ -1,3 +1,4 @@
+import '../backend/api_requests/api_calls.dart';
 import '../create_account_f_s_s_a_i_linked/create_account_f_s_s_a_i_linked_widget.dart';
 import '../flutter_flow/flutter_flow_theme.dart';
 import '../flutter_flow/flutter_flow_util.dart';
@@ -16,13 +17,14 @@ class CreateAccountFSSAIWidget extends StatefulWidget {
 }
 
 class _CreateAccountFSSAIWidgetState extends State<CreateAccountFSSAIWidget> {
-  TextEditingController? textController;
+  ApiCallResponse? fssaiAPIResponse;
+  TextEditingController? fssaiNumController;
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
     super.initState();
-    textController = TextEditingController();
+    fssaiNumController = TextEditingController();
   }
 
   @override
@@ -86,9 +88,9 @@ class _CreateAccountFSSAIWidgetState extends State<CreateAccountFSSAIWidget> {
                   color: FlutterFlowTheme.of(context).secondaryText,
                 ),
                 TextFormField(
-                  controller: textController,
+                  controller: fssaiNumController,
                   onChanged: (_) => EasyDebounce.debounce(
-                    'textController',
+                    'fssaiNumController',
                     Duration(milliseconds: 2000),
                     () => setState(() {}),
                   ),
@@ -117,10 +119,10 @@ class _CreateAccountFSSAIWidgetState extends State<CreateAccountFSSAIWidget> {
                         topRight: Radius.circular(4.0),
                       ),
                     ),
-                    suffixIcon: textController!.text.isNotEmpty
+                    suffixIcon: fssaiNumController!.text.isNotEmpty
                         ? InkWell(
                             onTap: () => setState(
-                              () => textController?.clear(),
+                              () => fssaiNumController?.clear(),
                             ),
                             child: Icon(
                               Icons.clear,
@@ -130,17 +132,39 @@ class _CreateAccountFSSAIWidgetState extends State<CreateAccountFSSAIWidget> {
                           )
                         : null,
                   ),
-                  style: FlutterFlowTheme.of(context).bodyText1,
+                  style: FlutterFlowTheme.of(context).bodyText1.override(
+                        fontFamily: 'Poppins',
+                        color: FlutterFlowTheme.of(context).secondaryText,
+                      ),
                   textAlign: TextAlign.center,
                 ),
                 FFButtonWidget(
                   onPressed: () async {
-                    await Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => CreateAccountFSSAILinkedWidget(),
-                      ),
+                    fssaiAPIResponse = await FssaiCall.call(
+                      fssaiRegNum: int.parse(fssaiNumController!.text),
                     );
+                    if ((fssaiAPIResponse!?.succeeded ?? true)) {
+                      await Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => CreateAccountFSSAILinkedWidget(
+                            fssaiFirmName: getJsonField(
+                              (fssaiAPIResponse?.jsonBody ?? ''),
+                              r'''$.result.FirmName''',
+                            ),
+                          ),
+                        ),
+                      );
+                    } else {
+                      await Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => CreateAccountFSSAIWidget(),
+                        ),
+                      );
+                    }
+
+                    setState(() {});
                   },
                   text: 'Validate',
                   options: FFButtonOptions(

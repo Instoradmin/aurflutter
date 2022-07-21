@@ -1,3 +1,4 @@
+import '../backend/api_requests/api_calls.dart';
 import '../create_account_g_s_t_linked/create_account_g_s_t_linked_widget.dart';
 import '../flutter_flow/flutter_flow_theme.dart';
 import '../flutter_flow/flutter_flow_util.dart';
@@ -15,13 +16,14 @@ class CreateAccountGSTWidget extends StatefulWidget {
 }
 
 class _CreateAccountGSTWidgetState extends State<CreateAccountGSTWidget> {
-  TextEditingController? textController;
+  ApiCallResponse? gstAPIResponse;
+  TextEditingController? gstNumController;
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
     super.initState();
-    textController = TextEditingController();
+    gstNumController = TextEditingController();
   }
 
   @override
@@ -85,9 +87,9 @@ class _CreateAccountGSTWidgetState extends State<CreateAccountGSTWidget> {
                   color: FlutterFlowTheme.of(context).secondaryText,
                 ),
                 TextFormField(
-                  controller: textController,
+                  controller: gstNumController,
                   onChanged: (_) => EasyDebounce.debounce(
-                    'textController',
+                    'gstNumController',
                     Duration(milliseconds: 2000),
                     () => setState(() {}),
                   ),
@@ -116,10 +118,10 @@ class _CreateAccountGSTWidgetState extends State<CreateAccountGSTWidget> {
                         topRight: Radius.circular(4.0),
                       ),
                     ),
-                    suffixIcon: textController!.text.isNotEmpty
+                    suffixIcon: gstNumController!.text.isNotEmpty
                         ? InkWell(
                             onTap: () => setState(
-                              () => textController?.clear(),
+                              () => gstNumController?.clear(),
                             ),
                             child: Icon(
                               Icons.clear,
@@ -129,17 +131,39 @@ class _CreateAccountGSTWidgetState extends State<CreateAccountGSTWidget> {
                           )
                         : null,
                   ),
-                  style: FlutterFlowTheme.of(context).bodyText1,
+                  style: FlutterFlowTheme.of(context).bodyText1.override(
+                        fontFamily: 'Poppins',
+                        color: FlutterFlowTheme.of(context).secondaryText,
+                      ),
                   textAlign: TextAlign.center,
                 ),
                 FFButtonWidget(
                   onPressed: () async {
-                    await Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => CreateAccountGSTLinkedWidget(),
-                      ),
+                    gstAPIResponse = await GstCall.call(
+                      gstNumber: gstNumController!.text,
                     );
+                    if ((gstAPIResponse!?.succeeded ?? true)) {
+                      await Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => CreateAccountGSTLinkedWidget(
+                            gstTradeName: getJsonField(
+                              (gstAPIResponse?.jsonBody ?? ''),
+                              r'''$.result.tradeNam''',
+                            ),
+                          ),
+                        ),
+                      );
+                    } else {
+                      await Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => CreateAccountGSTWidget(),
+                        ),
+                      );
+                    }
+
+                    setState(() {});
                   },
                   text: 'Validate',
                   options: FFButtonOptions(

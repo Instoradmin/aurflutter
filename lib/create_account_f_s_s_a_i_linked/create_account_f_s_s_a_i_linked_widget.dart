@@ -7,7 +7,12 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class CreateAccountFSSAILinkedWidget extends StatefulWidget {
-  const CreateAccountFSSAILinkedWidget({Key? key}) : super(key: key);
+  const CreateAccountFSSAILinkedWidget({
+    Key? key,
+    this.fssaiFirmName,
+  }) : super(key: key);
+
+  final dynamic fssaiFirmName;
 
   @override
   _CreateAccountFSSAILinkedWidgetState createState() =>
@@ -69,6 +74,16 @@ class _CreateAccountFSSAILinkedWidgetState
             child: Column(
               mainAxisSize: MainAxisSize.max,
               children: [
+                Text(
+                  widget.fssaiFirmName!,
+                  style: FlutterFlowTheme.of(context).bodyText1.override(
+                        fontFamily: 'Poppins',
+                        color: FlutterFlowTheme.of(context).primaryColor,
+                      ),
+                ),
+                Divider(
+                  color: FlutterFlowTheme.of(context).secondaryText,
+                ),
                 Text(
                   'Thank you for linking FSSAI.',
                   style: FlutterFlowTheme.of(context).subtitle1.override(

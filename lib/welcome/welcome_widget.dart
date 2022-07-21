@@ -27,7 +27,7 @@ class _WelcomeWidgetState extends State<WelcomeWidget> {
         backgroundColor: Color(0xFFF5F5F5),
         automaticallyImplyLeading: false,
         title: Text(
-          'Welcome, [user]',
+          'Profile',
           style: FlutterFlowTheme.of(context).title2.override(
                 fontFamily: 'Poppins',
                 color: FlutterFlowTheme.of(context).secondaryText,
@@ -66,26 +66,71 @@ class _WelcomeWidgetState extends State<WelcomeWidget> {
             decoration: BoxDecoration(
               color: FlutterFlowTheme.of(context).primaryBtnText,
             ),
-            child: Padding(
-              padding: EdgeInsetsDirectional.fromSTEB(8, 8, 8, 8),
-              child: Container(
-                width: double.infinity,
-                height: 200,
-                decoration: BoxDecoration(
-                  color: Color(0xFFEEEEEE),
+            child: Column(
+              mainAxisSize: MainAxisSize.max,
+              children: [
+                Row(
+                  mainAxisSize: MainAxisSize.max,
+                  children: [
+                    Text(
+                      'Welcome, ',
+                      style: FlutterFlowTheme.of(context).bodyText1.override(
+                            fontFamily: 'Poppins',
+                            color: FlutterFlowTheme.of(context).secondaryText,
+                          ),
+                    ),
+                    Text(
+                      widget.appuser!,
+                      style: FlutterFlowTheme.of(context).bodyText1.override(
+                            fontFamily: 'Poppins',
+                            color: FlutterFlowTheme.of(context).secondaryText,
+                          ),
+                    ),
+                  ],
                 ),
-                child: Card(
-                  clipBehavior: Clip.antiAliasWithSaveLayer,
-                  color: Color(0xFFF5F5F5),
-                  child: Text(
-                    'Basic Info:\nName\nEmail\nDate of Birth\nMobile\n\nDetails:\nAadhar Number:\nPAN Card Number:\nBank Account Number:\nGST Number:\nFSSAI Registration Number:',
-                    style: FlutterFlowTheme.of(context).bodyText1.override(
-                          fontFamily: 'Poppins',
-                          color: FlutterFlowTheme.of(context).secondaryText,
-                        ),
+                Padding(
+                  padding: EdgeInsetsDirectional.fromSTEB(8, 8, 8, 8),
+                  child: Container(
+                    width: double.infinity,
+                    height: 200,
+                    decoration: BoxDecoration(
+                      color: Color(0xFFEEEEEE),
+                    ),
+                    child: Card(
+                      clipBehavior: Clip.antiAliasWithSaveLayer,
+                      color: Color(0xFFF5F5F5),
+                      child: Text(
+                        'Basic Info:\nName\nEmail\nDate of Birth\nMobile\n',
+                        style: FlutterFlowTheme.of(context).bodyText1.override(
+                              fontFamily: 'Poppins',
+                              color: FlutterFlowTheme.of(context).secondaryText,
+                            ),
+                      ),
+                    ),
                   ),
                 ),
-              ),
+                Padding(
+                  padding: EdgeInsetsDirectional.fromSTEB(8, 0, 8, 0),
+                  child: Container(
+                    width: double.infinity,
+                    height: 200,
+                    decoration: BoxDecoration(
+                      color: Color(0xFFEEEEEE),
+                    ),
+                    child: Card(
+                      clipBehavior: Clip.antiAliasWithSaveLayer,
+                      color: Color(0xFFF5F5F5),
+                      child: Text(
+                        'Details:\nAadhar Number:\nPAN Card Number:\nBank Account Number:\nGST Number:\nFSSAI Registration Number:',
+                        style: FlutterFlowTheme.of(context).bodyText1.override(
+                              fontFamily: 'Poppins',
+                              color: FlutterFlowTheme.of(context).secondaryText,
+                            ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
         ),

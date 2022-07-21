@@ -1,4 +1,5 @@
-import '../create_account/create_account_widget.dart';
+import '../backend/api_requests/api_calls.dart';
+import '../create_account_details/create_account_details_widget.dart';
 import '../flutter_flow/flutter_flow_theme.dart';
 import '../flutter_flow/flutter_flow_util.dart';
 import '../flutter_flow/flutter_flow_widgets.dart';
@@ -15,6 +16,7 @@ class HomePageWidget extends StatefulWidget {
 }
 
 class _HomePageWidgetState extends State<HomePageWidget> {
+  ApiCallResponse? loginAPIResponse;
   TextEditingController? textController1;
   TextEditingController? textController2;
   late bool passwordVisibility;
@@ -99,7 +101,8 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                             await Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => CreateAccountWidget(),
+                                builder: (context) =>
+                                    CreateAccountDetailsWidget(),
                               ),
                             );
                           },
@@ -171,7 +174,10 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                 )
                               : null,
                         ),
-                        style: FlutterFlowTheme.of(context).bodyText1,
+                        style: FlutterFlowTheme.of(context).bodyText1.override(
+                              fontFamily: 'Poppins',
+                              color: FlutterFlowTheme.of(context).secondaryText,
+                            ),
                         textAlign: TextAlign.center,
                       ),
                     ),
@@ -218,18 +224,41 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                             ),
                           ),
                         ),
-                        style: FlutterFlowTheme.of(context).bodyText1,
+                        style: FlutterFlowTheme.of(context).bodyText1.override(
+                              fontFamily: 'Poppins',
+                              color: FlutterFlowTheme.of(context).secondaryText,
+                            ),
                         textAlign: TextAlign.center,
                       ),
                     ),
                     FFButtonWidget(
                       onPressed: () async {
-                        await Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => WelcomeWidget(),
-                          ),
+                        loginAPIResponse = await LoginCall.call(
+                          username: textController1!.text,
+                          password: textController2!.text,
                         );
+                        if ((loginAPIResponse!?.succeeded ?? true)) {
+                          await Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => WelcomeWidget(
+                                appuser: getJsonField(
+                                  (loginAPIResponse?.jsonBody ?? ''),
+                                  r'''$.userId''',
+                                ),
+                              ),
+                            ),
+                          );
+                        } else {
+                          await Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => HomePageWidget(),
+                            ),
+                          );
+                        }
+
+                        setState(() {});
                       },
                       text: 'Login',
                       options: FFButtonOptions(

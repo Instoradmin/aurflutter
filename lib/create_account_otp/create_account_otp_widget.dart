@@ -102,7 +102,10 @@ class _CreateAccountOtpWidgetState extends State<CreateAccountOtpWidget> {
                       ),
                     ),
                   ),
-                  style: FlutterFlowTheme.of(context).bodyText1,
+                  style: FlutterFlowTheme.of(context).bodyText1.override(
+                        fontFamily: 'Poppins',
+                        color: FlutterFlowTheme.of(context).secondaryText,
+                      ),
                   textAlign: TextAlign.center,
                 ),
                 FFButtonWidget(

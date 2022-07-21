@@ -16,15 +16,15 @@ class CreateAccountBankWidget extends StatefulWidget {
 }
 
 class _CreateAccountBankWidgetState extends State<CreateAccountBankWidget> {
-  TextEditingController? textController1;
-  TextEditingController? textController2;
+  TextEditingController? bankCodeController;
+  TextEditingController? bankNumberController;
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
     super.initState();
-    textController1 = TextEditingController();
-    textController2 = TextEditingController();
+    bankCodeController = TextEditingController();
+    bankNumberController = TextEditingController();
   }
 
   @override
@@ -88,9 +88,9 @@ class _CreateAccountBankWidgetState extends State<CreateAccountBankWidget> {
                   color: FlutterFlowTheme.of(context).secondaryText,
                 ),
                 TextFormField(
-                  controller: textController1,
+                  controller: bankNumberController,
                   onChanged: (_) => EasyDebounce.debounce(
-                    'textController1',
+                    'bankNumberController',
                     Duration(milliseconds: 2000),
                     () => setState(() {}),
                   ),
@@ -119,10 +119,10 @@ class _CreateAccountBankWidgetState extends State<CreateAccountBankWidget> {
                         topRight: Radius.circular(4.0),
                       ),
                     ),
-                    suffixIcon: textController1!.text.isNotEmpty
+                    suffixIcon: bankNumberController!.text.isNotEmpty
                         ? InkWell(
                             onTap: () => setState(
-                              () => textController1?.clear(),
+                              () => bankNumberController?.clear(),
                             ),
                             child: Icon(
                               Icons.clear,
@@ -132,11 +132,14 @@ class _CreateAccountBankWidgetState extends State<CreateAccountBankWidget> {
                           )
                         : null,
                   ),
-                  style: FlutterFlowTheme.of(context).bodyText1,
+                  style: FlutterFlowTheme.of(context).bodyText1.override(
+                        fontFamily: 'Poppins',
+                        color: FlutterFlowTheme.of(context).secondaryText,
+                      ),
                   textAlign: TextAlign.center,
                 ),
                 TextFormField(
-                  controller: textController2,
+                  controller: bankCodeController,
                   autofocus: true,
                   obscureText: false,
                   decoration: InputDecoration(
@@ -163,7 +166,10 @@ class _CreateAccountBankWidgetState extends State<CreateAccountBankWidget> {
                       ),
                     ),
                   ),
-                  style: FlutterFlowTheme.of(context).bodyText1,
+                  style: FlutterFlowTheme.of(context).bodyText1.override(
+                        fontFamily: 'Poppins',
+                        color: FlutterFlowTheme.of(context).secondaryText,
+                      ),
                   textAlign: TextAlign.center,
                 ),
                 FFButtonWidget(
