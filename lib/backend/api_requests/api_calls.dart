@@ -165,3 +165,22 @@ class AadharDownloadCall {
     );
   }
 }
+
+class UserdetailsCall {
+  static Future<ApiCallResponse> call() {
+    final body = '''
+{
+    "userName":"johndoe"
+}''';
+    return ApiManager.instance.makeApiCall(
+      callName: 'userdetails',
+      apiUrl: 'http://devaurigraph.aurigraph.io:9091/smartcontract/userDetails',
+      callType: ApiCallType.POST,
+      headers: {},
+      params: {},
+      body: body,
+      bodyType: BodyType.JSON,
+      returnBody: true,
+    );
+  }
+}

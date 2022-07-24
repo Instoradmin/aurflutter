@@ -1,8 +1,9 @@
+import '../backend/api_requests/api_calls.dart';
 import '../flutter_flow/flutter_flow_theme.dart';
 import '../flutter_flow/flutter_flow_util.dart';
 import '../flutter_flow/flutter_flow_widgets.dart';
 import '../home_page/home_page_widget.dart';
-import '../welcome/welcome_widget.dart';
+import '../profile/profile_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -21,6 +22,7 @@ class CreateAccountFSSAILinkedWidget extends StatefulWidget {
 
 class _CreateAccountFSSAILinkedWidgetState
     extends State<CreateAccountFSSAILinkedWidget> {
+  ApiCallResponse? userdetailsAPIResponse;
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
@@ -94,12 +96,27 @@ class _CreateAccountFSSAILinkedWidgetState
                 Divider(),
                 FFButtonWidget(
                   onPressed: () async {
-                    await Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => WelcomeWidget(),
-                      ),
-                    );
+                    userdetailsAPIResponse = await UserdetailsCall.call();
+                    if ((userdetailsAPIResponse!?.succeeded ?? true)) {
+                      await Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => ProfileWidget(
+                            appuserdetails:
+                                (userdetailsAPIResponse?.jsonBody ?? ''),
+                          ),
+                        ),
+                      );
+                    } else {
+                      await Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => HomePageWidget(),
+                        ),
+                      );
+                    }
+
+                    setState(() {});
                   },
                   text: 'Next',
                   options: FFButtonOptions(

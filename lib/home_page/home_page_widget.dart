@@ -3,7 +3,7 @@ import '../create_account_details/create_account_details_widget.dart';
 import '../flutter_flow/flutter_flow_theme.dart';
 import '../flutter_flow/flutter_flow_util.dart';
 import '../flutter_flow/flutter_flow_widgets.dart';
-import '../welcome/welcome_widget.dart';
+import '../profile/profile_widget.dart';
 import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -17,6 +17,7 @@ class HomePageWidget extends StatefulWidget {
 
 class _HomePageWidgetState extends State<HomePageWidget> {
   ApiCallResponse? loginAPIResponse;
+  ApiCallResponse? userdetailsloginAPIResponse;
   TextEditingController? textController1;
   TextEditingController? textController2;
   late bool passwordVisibility;
@@ -238,14 +239,15 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                           password: textController2!.text,
                         );
                         if ((loginAPIResponse!?.succeeded ?? true)) {
+                          userdetailsloginAPIResponse =
+                              await UserdetailsCall.call();
                           await Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => WelcomeWidget(
-                                appuser: getJsonField(
-                                  (loginAPIResponse?.jsonBody ?? ''),
-                                  r'''$.userId''',
-                                ),
+                              builder: (context) => ProfileWidget(
+                                appuserdetails:
+                                    (userdetailsloginAPIResponse?.jsonBody ??
+                                        ''),
                               ),
                             ),
                           );
