@@ -25,11 +25,20 @@ class _CreateAccountBankLinkedWidgetState
       appBar: AppBar(
         backgroundColor: Color(0xFFF5F5F5),
         automaticallyImplyLeading: false,
+        leading: Padding(
+          padding: EdgeInsetsDirectional.fromSTEB(8, 8, 0, 0),
+          child: Image.asset(
+            'assets/images/aurigraphLogoMainLinkedin_(1).png',
+            width: 100,
+            height: 100,
+            fit: BoxFit.cover,
+          ),
+        ),
         title: Text(
-          'Create Account',
+          'Aurigraph',
           style: FlutterFlowTheme.of(context).title2.override(
                 fontFamily: 'Poppins',
-                color: FlutterFlowTheme.of(context).secondaryText,
+                color: Color(0xFF000080),
                 fontSize: 22,
               ),
         ),
@@ -69,6 +78,13 @@ class _CreateAccountBankLinkedWidgetState
             child: Column(
               mainAxisSize: MainAxisSize.max,
               children: [
+                Text(
+                  'Create Account',
+                  style: FlutterFlowTheme.of(context).title3.override(
+                        fontFamily: 'Poppins',
+                        color: FlutterFlowTheme.of(context).primaryColor,
+                      ),
+                ),
                 Text(
                   'Thank you for linking Bank Account.',
                   style: FlutterFlowTheme.of(context).subtitle1.override(

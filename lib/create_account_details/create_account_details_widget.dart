@@ -1,3 +1,5 @@
+import '../backend/api_requests/api_calls.dart';
+import '../create_account/create_account_widget.dart';
 import '../create_account_aadhar/create_account_aadhar_widget.dart';
 import '../flutter_flow/flutter_flow_theme.dart';
 import '../flutter_flow/flutter_flow_util.dart';
@@ -17,21 +19,25 @@ class CreateAccountDetailsWidget extends StatefulWidget {
 
 class _CreateAccountDetailsWidgetState
     extends State<CreateAccountDetailsWidget> {
-  TextEditingController? textController1;
-  TextEditingController? textController2;
-  TextEditingController? textController3;
-  TextEditingController? textController4;
-  TextEditingController? textController5;
+  ApiCallResponse? registerAPIResponse;
+  ApiCallResponse? registrationAPIResponse;
+  TextEditingController? passwordController;
+  TextEditingController? usernameController;
+  TextEditingController? firstnameController;
+  TextEditingController? lastnameController;
+  TextEditingController? mobilenumberController;
+  TextEditingController? emailController;
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
     super.initState();
-    textController1 = TextEditingController();
-    textController2 = TextEditingController();
-    textController3 = TextEditingController();
-    textController4 = TextEditingController();
-    textController5 = TextEditingController();
+    emailController = TextEditingController();
+    firstnameController = TextEditingController();
+    passwordController = TextEditingController();
+    usernameController = TextEditingController();
+    lastnameController = TextEditingController();
+    mobilenumberController = TextEditingController();
   }
 
   @override
@@ -41,11 +47,20 @@ class _CreateAccountDetailsWidgetState
       appBar: AppBar(
         backgroundColor: Color(0xFFF5F5F5),
         automaticallyImplyLeading: false,
+        leading: Padding(
+          padding: EdgeInsetsDirectional.fromSTEB(8, 8, 0, 0),
+          child: Image.asset(
+            'assets/images/aurigraphLogoMainLinkedin_(1).png',
+            width: 100,
+            height: 100,
+            fit: BoxFit.cover,
+          ),
+        ),
         title: Text(
-          'Create Account',
+          'Aurigraph',
           style: FlutterFlowTheme.of(context).title2.override(
                 fontFamily: 'Poppins',
-                color: FlutterFlowTheme.of(context).secondaryText,
+                color: Color(0xFF000080),
                 fontSize: 22,
               ),
         ),
@@ -86,6 +101,13 @@ class _CreateAccountDetailsWidgetState
               mainAxisSize: MainAxisSize.max,
               children: [
                 Text(
+                  'Create Account',
+                  style: FlutterFlowTheme.of(context).title3.override(
+                        fontFamily: 'Poppins',
+                        color: FlutterFlowTheme.of(context).primaryColor,
+                      ),
+                ),
+                Text(
                   'Thank you for registering. \nPlease add your details below: ',
                   style: FlutterFlowTheme.of(context).bodyText1.override(
                         fontFamily: 'Poppins',
@@ -93,10 +115,148 @@ class _CreateAccountDetailsWidgetState
                       ),
                 ),
                 Divider(),
+                Container(
+                  width: double.infinity,
+                  child: TextFormField(
+                    controller: usernameController,
+                    onChanged: (_) => EasyDebounce.debounce(
+                      'usernameController',
+                      Duration(milliseconds: 2000),
+                      () => setState(() {}),
+                    ),
+                    autofocus: true,
+                    obscureText: false,
+                    decoration: InputDecoration(
+                      hintText: 'username',
+                      hintStyle: FlutterFlowTheme.of(context).bodyText2,
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                          color: Color(0x00000000),
+                          width: 1,
+                        ),
+                        borderRadius: const BorderRadius.only(
+                          topLeft: Radius.circular(4.0),
+                          topRight: Radius.circular(4.0),
+                        ),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                          color: Color(0x00000000),
+                          width: 1,
+                        ),
+                        borderRadius: const BorderRadius.only(
+                          topLeft: Radius.circular(4.0),
+                          topRight: Radius.circular(4.0),
+                        ),
+                      ),
+                      suffixIcon: usernameController!.text.isNotEmpty
+                          ? InkWell(
+                              onTap: () => setState(
+                                () => usernameController?.clear(),
+                              ),
+                              child: Icon(
+                                Icons.clear,
+                                color: Color(0xFF757575),
+                                size: 22,
+                              ),
+                            )
+                          : null,
+                    ),
+                    style: FlutterFlowTheme.of(context).bodyText1.override(
+                          fontFamily: 'Poppins',
+                          color: FlutterFlowTheme.of(context).secondaryText,
+                        ),
+                    textAlign: TextAlign.center,
+                    keyboardType: TextInputType.datetime,
+                  ),
+                ),
                 TextFormField(
-                  controller: textController1,
+                  controller: passwordController,
                   onChanged: (_) => EasyDebounce.debounce(
-                    'textController1',
+                    'passwordController',
+                    Duration(milliseconds: 2000),
+                    () => setState(() {}),
+                  ),
+                  onFieldSubmitted: (_) async {
+                    registrationAPIResponse = await RegistrationCall.call(
+                      username: usernameController!.text,
+                      password: passwordController!.text,
+                      firstname: firstnameController!.text,
+                      lastname: lastnameController!.text,
+                      emailID: emailController!.text,
+                      mobilenumber: int.parse(mobilenumberController!.text),
+                    );
+                    if ((registrationAPIResponse!?.succeeded ?? true)) {
+                      await Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => CreateAccountAadharWidget(
+                            newusercreatemsg: getJsonField(
+                              (registrationAPIResponse?.jsonBody ?? ''),
+                              r'''$.registrationStatus''',
+                            ),
+                          ),
+                        ),
+                      );
+                    } else {
+                      await Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => CreateAccountWidget(),
+                        ),
+                      );
+                    }
+
+                    setState(() {});
+                  },
+                  autofocus: true,
+                  obscureText: false,
+                  decoration: InputDecoration(
+                    hintText: 'password',
+                    hintStyle: FlutterFlowTheme.of(context).bodyText2,
+                    enabledBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(
+                        color: Color(0x00000000),
+                        width: 1,
+                      ),
+                      borderRadius: const BorderRadius.only(
+                        topLeft: Radius.circular(4.0),
+                        topRight: Radius.circular(4.0),
+                      ),
+                    ),
+                    focusedBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(
+                        color: Color(0x00000000),
+                        width: 1,
+                      ),
+                      borderRadius: const BorderRadius.only(
+                        topLeft: Radius.circular(4.0),
+                        topRight: Radius.circular(4.0),
+                      ),
+                    ),
+                    suffixIcon: passwordController!.text.isNotEmpty
+                        ? InkWell(
+                            onTap: () => setState(
+                              () => passwordController?.clear(),
+                            ),
+                            child: Icon(
+                              Icons.clear,
+                              color: Color(0xFF757575),
+                              size: 22,
+                            ),
+                          )
+                        : null,
+                  ),
+                  style: FlutterFlowTheme.of(context).bodyText1.override(
+                        fontFamily: 'Poppins',
+                        color: FlutterFlowTheme.of(context).secondaryText,
+                      ),
+                  textAlign: TextAlign.center,
+                ),
+                TextFormField(
+                  controller: firstnameController,
+                  onChanged: (_) => EasyDebounce.debounce(
+                    'firstnameController',
                     Duration(milliseconds: 2000),
                     () => setState(() {}),
                   ),
@@ -125,10 +285,10 @@ class _CreateAccountDetailsWidgetState
                         topRight: Radius.circular(4.0),
                       ),
                     ),
-                    suffixIcon: textController1!.text.isNotEmpty
+                    suffixIcon: firstnameController!.text.isNotEmpty
                         ? InkWell(
                             onTap: () => setState(
-                              () => textController1?.clear(),
+                              () => firstnameController?.clear(),
                             ),
                             child: Icon(
                               Icons.clear,
@@ -145,9 +305,9 @@ class _CreateAccountDetailsWidgetState
                   textAlign: TextAlign.center,
                 ),
                 TextFormField(
-                  controller: textController2,
+                  controller: lastnameController,
                   onChanged: (_) => EasyDebounce.debounce(
-                    'textController2',
+                    'lastnameController',
                     Duration(milliseconds: 2000),
                     () => setState(() {}),
                   ),
@@ -176,10 +336,10 @@ class _CreateAccountDetailsWidgetState
                         topRight: Radius.circular(4.0),
                       ),
                     ),
-                    suffixIcon: textController2!.text.isNotEmpty
+                    suffixIcon: lastnameController!.text.isNotEmpty
                         ? InkWell(
                             onTap: () => setState(
-                              () => textController2?.clear(),
+                              () => lastnameController?.clear(),
                             ),
                             child: Icon(
                               Icons.clear,
@@ -196,9 +356,9 @@ class _CreateAccountDetailsWidgetState
                   textAlign: TextAlign.center,
                 ),
                 TextFormField(
-                  controller: textController3,
+                  controller: mobilenumberController,
                   onChanged: (_) => EasyDebounce.debounce(
-                    'textController3',
+                    'mobilenumberController',
                     Duration(milliseconds: 2000),
                     () => setState(() {}),
                   ),
@@ -227,10 +387,10 @@ class _CreateAccountDetailsWidgetState
                         topRight: Radius.circular(4.0),
                       ),
                     ),
-                    suffixIcon: textController3!.text.isNotEmpty
+                    suffixIcon: mobilenumberController!.text.isNotEmpty
                         ? InkWell(
                             onTap: () => setState(
-                              () => textController3?.clear(),
+                              () => mobilenumberController?.clear(),
                             ),
                             child: Icon(
                               Icons.clear,
@@ -248,9 +408,9 @@ class _CreateAccountDetailsWidgetState
                   keyboardType: TextInputType.phone,
                 ),
                 TextFormField(
-                  controller: textController4,
+                  controller: emailController,
                   onChanged: (_) => EasyDebounce.debounce(
-                    'textController4',
+                    'emailController',
                     Duration(milliseconds: 2000),
                     () => setState(() {}),
                   ),
@@ -279,10 +439,10 @@ class _CreateAccountDetailsWidgetState
                         topRight: Radius.circular(4.0),
                       ),
                     ),
-                    suffixIcon: textController4!.text.isNotEmpty
+                    suffixIcon: emailController!.text.isNotEmpty
                         ? InkWell(
                             onTap: () => setState(
-                              () => textController4?.clear(),
+                              () => emailController?.clear(),
                             ),
                             child: Icon(
                               Icons.clear,
@@ -299,69 +459,39 @@ class _CreateAccountDetailsWidgetState
                   textAlign: TextAlign.center,
                   keyboardType: TextInputType.emailAddress,
                 ),
-                TextFormField(
-                  controller: textController5,
-                  onChanged: (_) => EasyDebounce.debounce(
-                    'textController5',
-                    Duration(milliseconds: 2000),
-                    () => setState(() {}),
-                  ),
-                  autofocus: true,
-                  obscureText: false,
-                  decoration: InputDecoration(
-                    hintText: 'date of birth in dd/mm/yyyy',
-                    hintStyle: FlutterFlowTheme.of(context).bodyText2,
-                    enabledBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(
-                        color: Color(0x00000000),
-                        width: 1,
-                      ),
-                      borderRadius: const BorderRadius.only(
-                        topLeft: Radius.circular(4.0),
-                        topRight: Radius.circular(4.0),
-                      ),
-                    ),
-                    focusedBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(
-                        color: Color(0x00000000),
-                        width: 1,
-                      ),
-                      borderRadius: const BorderRadius.only(
-                        topLeft: Radius.circular(4.0),
-                        topRight: Radius.circular(4.0),
-                      ),
-                    ),
-                    suffixIcon: textController5!.text.isNotEmpty
-                        ? InkWell(
-                            onTap: () => setState(
-                              () => textController5?.clear(),
-                            ),
-                            child: Icon(
-                              Icons.clear,
-                              color: Color(0xFF757575),
-                              size: 22,
-                            ),
-                          )
-                        : null,
-                  ),
-                  style: FlutterFlowTheme.of(context).bodyText1.override(
-                        fontFamily: 'Poppins',
-                        color: FlutterFlowTheme.of(context).secondaryText,
-                      ),
-                  textAlign: TextAlign.center,
-                  keyboardType: TextInputType.datetime,
-                ),
                 Divider(
                   color: Color(0xFF595959),
                 ),
                 FFButtonWidget(
                   onPressed: () async {
-                    await Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => CreateAccountAadharWidget(),
-                      ),
+                    registerAPIResponse = await RegistrationCall.call(
+                      username: usernameController!.text,
+                      password: passwordController!.text,
+                      emailID: emailController!.text,
+                      mobilenumber: int.parse(mobilenumberController!.text),
+                      firstname: firstnameController!.text,
+                      lastname: lastnameController!.text,
                     );
+                    if ((registerAPIResponse!?.succeeded ?? true)) {
+                      await Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => CreateAccountAadharWidget(
+                            newusercreatemsg:
+                                (registerAPIResponse?.jsonBody ?? ''),
+                          ),
+                        ),
+                      );
+                    } else {
+                      await Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => CreateAccountWidget(),
+                        ),
+                      );
+                    }
+
+                    setState(() {});
                   },
                   text: 'Submit',
                   options: FFButtonOptions(

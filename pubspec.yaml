@@ -68,6 +68,11 @@ flutter:
     - assets/lottie_animations/
     - assets/rive_animations/
     - assets/pdfs/
+  fonts:
+    - family: roboto
+      fonts:
+        - asset: assets/fonts/Roboto.zip
+          weight: 100
 
 
   # An image asset can refer to one or more resolution-specific "variants", see

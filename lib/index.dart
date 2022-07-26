@@ -31,3 +31,5 @@ export 'create_account_f_s_s_a_i_linked/create_account_f_s_s_a_i_linked_widget.d
 export 'create_account_p_a_n2/create_account_p_a_n2_widget.dart'
     show CreateAccountPAN2Widget;
 export 'profile/profile_widget.dart' show ProfileWidget;
+export 'create_account_details_copy/create_account_details_copy_widget.dart'
+    show CreateAccountDetailsCopyWidget;

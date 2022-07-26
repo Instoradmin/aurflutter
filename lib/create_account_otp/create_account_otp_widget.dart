@@ -7,7 +7,12 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class CreateAccountOtpWidget extends StatefulWidget {
-  const CreateAccountOtpWidget({Key? key}) : super(key: key);
+  const CreateAccountOtpWidget({
+    Key? key,
+    this.tpid,
+  }) : super(key: key);
+
+  final dynamic tpid;
 
   @override
   _CreateAccountOtpWidgetState createState() => _CreateAccountOtpWidgetState();

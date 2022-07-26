@@ -14,15 +14,15 @@ class CreateAccountWidget extends StatefulWidget {
 }
 
 class _CreateAccountWidgetState extends State<CreateAccountWidget> {
-  TextEditingController? textController1;
-  TextEditingController? textController2;
+  TextEditingController? mobilefieldController;
+  TextEditingController? tpidfieldController;
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
     super.initState();
-    textController1 = TextEditingController();
-    textController2 = TextEditingController();
+    mobilefieldController = TextEditingController();
+    tpidfieldController = TextEditingController();
   }
 
   @override
@@ -77,7 +77,7 @@ class _CreateAccountWidgetState extends State<CreateAccountWidget> {
               mainAxisSize: MainAxisSize.max,
               children: [
                 TextFormField(
-                  controller: textController1,
+                  controller: mobilefieldController,
                   autofocus: true,
                   obscureText: false,
                   decoration: InputDecoration(
@@ -111,7 +111,7 @@ class _CreateAccountWidgetState extends State<CreateAccountWidget> {
                   textAlign: TextAlign.center,
                 ),
                 TextFormField(
-                  controller: textController2,
+                  controller: tpidfieldController,
                   autofocus: true,
                   obscureText: false,
                   decoration: InputDecoration(

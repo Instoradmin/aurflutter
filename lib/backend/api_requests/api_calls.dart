@@ -184,3 +184,43 @@ class UserdetailsCall {
     );
   }
 }
+
+class RegistrationCall {
+  static Future<ApiCallResponse> call({
+    String? username = '',
+    String? emailID = '',
+    int? mobilenumber,
+    String? firstname = '',
+    String? lastname = '',
+    String? password = '',
+  }) {
+    final body = '''
+{
+  "userName": "${username}",
+  "aadharCardNumber": "",
+  "emailId": "${emailID}",
+  "mobileNumber": "${mobilenumber}",
+  "firstName": "${firstname}",
+  "lastName": "${lastname}",
+  "password": "${password}"
+}''';
+    return ApiManager.instance.makeApiCall(
+      callName: 'registration',
+      apiUrl:
+          'http://devaurigraph.aurigraph.io:9091/smartContract/user/registration',
+      callType: ApiCallType.POST,
+      headers: {},
+      params: {
+        'username': username,
+        'emailID': emailID,
+        'mobilenumber': mobilenumber,
+        'firstname': firstname,
+        'lastname': lastname,
+        'password': password,
+      },
+      body: body,
+      bodyType: BodyType.JSON,
+      returnBody: true,
+    );
+  }
+}
